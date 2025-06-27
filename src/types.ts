@@ -17,7 +17,8 @@ export interface VaultOptions  {
 
 
 export interface IVaultManager {
-  use(vaultId: string): Promise<Result<void>>;
+  use(vaultId: string): Promise<void>;
+
   getCurrentVaultId(): string;
   hasActiveVault(): boolean;
   saveSection<T>(sectionKey: keyof IdentityVault, data: T): Promise<void>;
@@ -81,7 +82,7 @@ export interface IdentityVault {
   identity?: IdentityFile
   didStore?:  IIdentifier[],
   keyStore?: IKey[],
-  privateKeyStore?: IKey[],
+  privateKeyStore?: ManagedPrivateKey[],
   vcStore?: SynetVerifiableCredential<BaseCredentialSubject>[]
   options?: {
     encryption?: {
@@ -104,4 +105,11 @@ export interface IdentityFile {
   createdAt: Date // Optional creation date for the vault  
 }
 
+
+export interface AdapterData {
+  dids: Record<string, IIdentifier>;
+  keys: Record<string, IKey>;
+  privateKeys: Record<string, ManagedPrivateKey>;
+  vcs: Record<string, SynetVerifiableCredential<BaseCredentialSubject>>;
+}
 

@@ -1,5 +1,6 @@
 // @synet/vault-core/src/vault-context.ts
 import { EventEmitter } from 'node:events';
+import type { IFileSystem } from '../interfaces/filesystemSync.interface';
 
 export class VaultContext extends EventEmitter {
   private _activeVaultId: string | null = null;
@@ -8,7 +9,7 @@ export class VaultContext extends EventEmitter {
     return this._activeVaultId;
   }
   
-  setActiveVault(vaultId: string | null): void {
+  setActiveVault(vaultId: string): void {
     const previous = this._activeVaultId;
     this._activeVaultId = vaultId;
     
@@ -17,8 +18,9 @@ export class VaultContext extends EventEmitter {
       previous, 
       current: vaultId 
     });
+    
   }
-  
+  // Check if a vault is currently active
   // Subscribe to changes
   onVaultChange(listener: (data: { previous: string | null, current: string | null }) => void): void {
     this.on('vaultChanged', listener);
