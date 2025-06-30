@@ -10,10 +10,7 @@ import type {
     AbstractVCStore
 } from './interfaces';
 
-export interface VaultOptions  { 
-  storeDir?: string; // Directory to store vault data
-}
-
+import type { IdentityVault } from './value-objects/vault';
 
 export interface IVaultManager {
   use(vaultId: string): Promise<Result<void>>
@@ -58,10 +55,6 @@ export interface IVaultStorage {
     // Additional methods as needed for managing vaults
 
 
-export interface IVaultFactory {
-  createVault(options?: VaultOptions): IVault;
-}
-
 export interface IVault {
   operator: IVaultOperator;
   adapters: IStorageAdapters;
@@ -76,36 +69,7 @@ export interface IStorageAdapters {
 }
 
 
-type EncryptionAlgorithm = 'aes-256-gcm' | 'chacha20-poly1305';
-
-export interface IdentityVault {
-  id: VaultId,  
-  identity?: Identity,
-  didStore?:  IIdentifier[],
-  keyStore?: IKey[],
-  privateKeyStore?: ManagedPrivateKey[],
-  vcStore?: SynetVerifiableCredential<BaseCredentialSubject>[]
-  wgKeyStore?: IWGKey[] // WireGuard keys
-  options?: {
-    encryption?: {
-      enabled: boolean
-      algorithm: EncryptionAlgorithm
-    }
-    privateKeysStorage?: 'local' | 'kms'
-  }
-  createdAt: Date // Optional creation date for the vault
-}
-
-export interface IdentityFile {
-  alias: string
-  did: string
-  kid: string
-  publicKeyHex: string
-  provider: string // did:key | did:web
-  credential: SynetVerifiableCredential<BaseCredentialSubject>
-  metadata?: Record<string, unknown>
-  createdAt: Date // Optional creation date for the vault  
-}
+export type EncryptionAlgorithm = 'aes-256-gcm' | 'chacha20-poly1305';
 
 
 export interface AdapterData {
@@ -114,4 +78,6 @@ export interface AdapterData {
   privateKeys: Record<string, ManagedPrivateKey>;
   vcs: Record<string, SynetVerifiableCredential<BaseCredentialSubject>>;
 }
+
+
 

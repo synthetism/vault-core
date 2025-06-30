@@ -5,3 +5,4 @@ export * from './events/vault-event-service';
 export * from './events/vault-events';
 export * from './interfaces';
 export * from './value-objects/vault-id';
+export * from './value-objects/vault';
