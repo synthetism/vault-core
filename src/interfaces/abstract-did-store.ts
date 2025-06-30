@@ -1,4 +1,4 @@
-import type { IIdentifier } from '@veramo/core-types'
+import type { IIdentifier } from '@synet/identity-core'
 
 /**
  * An abstract class for the {@link @veramo/did-manager#DIDManager} identifier store

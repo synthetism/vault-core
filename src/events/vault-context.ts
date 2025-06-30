@@ -1,6 +1,5 @@
 // @synet/vault-core/src/vault-context.ts
 import { EventEmitter } from 'node:events';
-import type { IFileSystem } from '../interfaces/filesystemSync.interface';
 
 export class VaultContext extends EventEmitter {
   private _activeVaultId: string | null = null;

@@ -1,9 +1,8 @@
 // @synet/vault-core/src/interfaces.ts
-import type { IIdentifier, IKey, ManagedKeyInfo } from '@veramo/core-types';
-import type {SynetVerifiableCredential, BaseCredentialSubject} from '@synet/credentials';
+import type { SynetVerifiableCredential, BaseCredentialSubject} from '@synet/credentials';
 import type { Result} from '@synet/patterns';
 import type { VaultId } from './value-objects/vault-id';
-import type { ManagedPrivateKey } from './interfaces/abstract-private-key-store';
+import type { Identity, ManagedPrivateKey, IIdentifier, IKey, IWGKey  } from '@synet/identity-core';
 import type { 
     AbstractDIDStore, 
     AbstractKeyStore, 
@@ -17,7 +16,7 @@ export interface VaultOptions  {
 
 
 export interface IVaultManager {
-  use(vaultId: string): Promise<void>;
+  use(vaultId: string): Promise<Result<void>>
 
   getCurrentVaultId(): string;
   hasActiveVault(): boolean;
@@ -32,21 +31,23 @@ export interface IVaultManager {
   loadVCs(): Promise<Record<string, SynetVerifiableCredential<BaseCredentialSubject>>>;
 
   saveDIDs(dids: Record<string, IIdentifier>): Promise<void>;
-  loadDIDs(): Promise<Record<string, IIdentifier>>;
+  loadDIDs(): Promise<Record<string, IIdentifier>> ;
 
 }
 
 export interface IVaultOperator {
+
   use(vaultId: string): Promise<Result<void>>;
   createNew(id: string): Promise<Result<void>>;
   deleteVault(id: string): Promise<Result<void>>;
   getVault(id: string): Promise<Result<IdentityVault>>;
+  updateVault(vault: IdentityVault): Promise<Result<void>>; // Update vault data
   listVaults(): Promise<Result<IdentityVault[]>>;
  
 }
 
 export interface IVaultStorage {
-    
+   exists (vaultId: string): Promise<boolean>
    create(vaultId:string,vault:IdentityVault): Promise<void>;
    get(vaultId: string): Promise<IdentityVault>;
    delete(vaultId: string): Promise<void>;
@@ -71,7 +72,7 @@ export interface IStorageAdapters {
   didStore: AbstractDIDStore;
   keyStore: AbstractKeyStore;
   privateKeyStore: AbstractPrivateKeyStore;
-  vcStore: AbstractVCStore<SynetVerifiableCredential<BaseCredentialSubject>>;
+  vcStore: AbstractVCStore;
 }
 
 
@@ -79,11 +80,12 @@ type EncryptionAlgorithm = 'aes-256-gcm' | 'chacha20-poly1305';
 
 export interface IdentityVault {
   id: VaultId,  
-  identity?: IdentityFile
+  identity?: Identity,
   didStore?:  IIdentifier[],
   keyStore?: IKey[],
   privateKeyStore?: ManagedPrivateKey[],
   vcStore?: SynetVerifiableCredential<BaseCredentialSubject>[]
+  wgKeyStore?: IWGKey[] // WireGuard keys
   options?: {
     encryption?: {
       enabled: boolean

@@ -1,4 +1,4 @@
-import type { IKey, ManagedKeyInfo } from '@veramo/core-types'
+import type { IKey, ManagedKeyInfo } from '@synet/identity-core'
 
 /**
  * This base abstract class should be extended to provide platform specific implementations that are usable by

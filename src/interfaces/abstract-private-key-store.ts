@@ -1,4 +1,4 @@
-import type { RequireOnly, TKeyType } from '@veramo/core-types'
+import type {  TKeyType, ManagedPrivateKey } from '@synet/identity-core'
 
 /**
  * Represents a private key.
@@ -10,11 +10,9 @@ import type { RequireOnly, TKeyType } from '@veramo/core-types'
  *
  * @public
  */
-export interface ManagedPrivateKey {
-  alias: string
-  privateKeyHex: string
-  type: TKeyType
-}
+
+export type RequireOnly<T, K extends keyof T> = Required<Pick<T, K>> & Partial<T>
+
 
 /**
  * Represents private key data that can be imported. This is a subset of {@link ManagedPrivateKey}.

@@ -1,6 +1,6 @@
 {
   "name": "@synet/vault-core",
-  "version": "0.0.1-dev.17",
+  "version": "0.0.1-dev.28",
   "description": "Identity vault core",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -49,8 +49,8 @@
   "license": "MIT",
   "dependencies": {
     "@synet/credentials": "^1.0.1",
+    "@synet/identity-core": "^0.1.1-dev.10",
     "@synet/logger": "^1.0.0",
-    "@synet/patterns": "^2.1.4",
-    "@veramo/core-types": "^6.0.0"
+    "@synet/patterns": "^2.1.7-dev.0"
   }
 }
