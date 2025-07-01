@@ -35,7 +35,7 @@ export interface IVaultManager {
 export interface IVaultOperator {
 
   use(vaultId: string): Promise<Result<void>>;
-  createNew(id: string): Promise<Result<void>>;
+  createNew(id: string): Promise<Result<VaultId>>;
   deleteVault(id: string): Promise<Result<void>>;
   getVault(id: string): Promise<Result<IdentityVault>>;
   updateVault(vault: IdentityVault): Promise<Result<void>>; // Update vault data

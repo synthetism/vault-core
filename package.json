@@ -1,6 +1,6 @@
 {
   "name": "@synet/vault-core",
-  "version": "0.0.1-dev.30",
+  "version": "0.0.1-dev.35",
   "description": "Identity vault core",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -5,42 +5,12 @@ import type { Identity, ManagedPrivateKey, IIdentifier, IKey, IWGKey  } from '@s
 import { VaultId } from './vault-id';
 import type { AdapterData, EncryptionAlgorithm } from '../vault-types';
 
-
 export interface VaultOptions { 
     encryption?: {
         enabled: boolean
         algorithm: EncryptionAlgorithm
     },
-    privateKeysStorage?: 'local' | 'kms'
-}
-
-export interface IVaultChild {
-  parentDNA: Partial<IIdentityVault>;
-  specialization: string;
-  generation: number;
-  birthData?: unknown;
-  capabilities: Set<string>;
-}
-
-/**
- * Child Unit for specialized vault evolution
- */
-export class VaultChild {
-  constructor(private props: IVaultChild) {}
-
-  get specialization(): string { return this.props.specialization; }
-  get generation(): number { return this.props.generation; }
-  get capabilities(): Set<string> { return this.props.capabilities; }
-
-  canHandle(operation: string, data?: unknown): boolean {
-    return this.capabilities.has(operation);
-  }
-
-  execute<T>(operation: string, data: unknown): Result<T> {
-    // Child-specific processing logic
-    // For now, just return success - implement specializations as needed
-    return Result.success(data as T);
-  }
+    privateKeysStorage?: 'local' | 'kms',
 }
 
 export interface IIdentityVault {
@@ -53,6 +23,7 @@ export interface IIdentityVault {
   wgKeyStore?: IWGKey[], // WireGuard keys
   options?: VaultOptions  
   createdAt: Date // Optional creation date for the vault
+  version?: string // Version of the vault structure
 }
 
 /**
@@ -67,7 +38,7 @@ export interface IIdentityVault {
 export class IdentityVault extends ValueObject<IIdentityVault> {
   private constructor(props: IIdentityVault) {
     super(props);
-  }
+  } 
 
   public static createNew(props: { id: string }): Result<IdentityVault> {
 
@@ -104,7 +75,7 @@ export class IdentityVault extends ValueObject<IIdentityVault> {
   /**
    * Create a new IdentityVault with validation
    */
-  public static create(props: {
+  public static create<S>(props: {
 
       id: string,
       identity?: Identity,
@@ -239,6 +210,7 @@ export class IdentityVault extends ValueObject<IIdentityVault> {
    */
   public static fromJSON(json: string): Result<IdentityVault> {
     try {
+
       const data = JSON.parse(json);
       
       return IdentityVault.create({
@@ -368,48 +340,4 @@ export class IdentityVault extends ValueObject<IIdentityVault> {
     return this.vcStore.find(vc => vc.id === vcId);
   }
 
-  /**
-   * BIOLOGICAL MODEL: Child Units for evolutionary data handling
-   */
-  protected children: VaultChild[] = [];
-  protected generation = 0;
-  protected parentDNA?: Partial<IIdentityVault>;
-
-  /**
-   * FRACTAL EVOLUTION: Creates specialized children for new data types
-   */
-  protected findOrCreateSpecializedChild(dataType: string, data?: unknown): VaultChild {
-    // Look for existing specialized child
-    let child = this.children.find(c => c.canHandle(dataType, data));
-    
-    if (!child) {
-      // Birth new child with specialized capabilities
-      child = this.birthChild(dataType, data);
-      this.children.push(child);
-    }
-    
-    return child;
-  }
-
-  protected birthChild(specialization: string, data?: unknown): VaultChild {
-    return new VaultChild({
-      parentDNA: this.props,
-      specialization,
-      generation: this.generation + 1,
-      birthData: data,
-      capabilities: new Set([specialization]) // Start with basic specialization
-    });
-  }
-
-  /**
-   * DELEGATION: When parent doesn't understand, ask the children
-   */
-  protected delegateToChildren<T>(operation: string, data: unknown): Result<T> | undefined {
-    for (const child of this.children) {
-      if (child.canHandle(operation, data)) {
-        return child.execute(operation, data);
-      }
-    }
-    return undefined;
-  }
 }
